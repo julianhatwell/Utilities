@@ -21,3 +21,9 @@ predict.regsubsets <- function(object, newdata, id, ...) {
   coefi <- coef(object, id = id)
   mat[,names(coefi)]%*%coefi
 }
+
+# return only the positive part or zero of a numeric vector
+pos.part <- function(x) {
+  x <- ifelse(x < 0, 0, x)
+  x
+}
