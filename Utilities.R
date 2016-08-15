@@ -21,3 +21,64 @@ predict.regsubsets <- function(object, newdata, id, ...) {
   coefi <- coef(object, id = id)
   mat[,names(coefi)]%*%coefi
 }
+
+# metrics from confusion matrix
+createMetrics <- function(confmat) {
+  metrics <- if (dim(confmat)[1] == 2) {
+    ntn <- confmat[1,1]
+    nfn <- confmat[1,2]
+    ntp <- confmat[2,2]
+    nfp <- confmat[2,1]
+    list(
+      confmat = confmat
+      , ntn = ntn
+      , nfn = nfn
+      , ntp = ntp
+      , nfp = nfp
+      , accuracy = (ntn+ntp)/sum(confmat)
+      , npv = ntn/(ntn+nfn) # accurate negative predictions
+      , ppv = ntp/(nfp+ntp) # precision, accurate positive predictions
+      , specificity = ntn/(ntn+nfp) # negative cases found
+      , sensitivity = ntp/(nfn+ntp) # recall, positive cases found
+      , fpr = nfp/(nfp+ntn) # false positive rate, fp out of all negative predictions
+    )
+  } else {
+    if (which(rownames(confmat) == colnames(confmat)) == 1) {
+      ntn <- confmat[1,1]
+      nfn <- confmat[1,2]
+      ntp <- 0
+      nfp <- 0
+      
+      npv <- 1
+      ppv <- 0
+      specificity <- 1
+      sensitivity <- 0
+      fpr <- 0
+    } else {
+      ntn <- 0
+      nfn <- 0
+      ntp <- confmat[2,2]
+      nfp <- confmat[2,1]
+      
+      npv <- 0
+      ppv <- 1
+      specificity <- 0
+      sensitivity <- 1
+      fpr <- 1
+    }
+    list(
+      confmat = confmat
+      , ntn = ntn
+      , nfn = nfn
+      , ntp = ntp
+      , nfp = nfp
+      , accuracy = accuracy <- confmat[rownames(confmat) == colnames(confmat)]/sum(confmat)
+      , npv = npv
+      , ppv = ppv
+      , specificity = specificity
+      , sensitivity = sensitivity
+      , fpr = fpr
+    )
+  }
+  return(metrics)
+}
