@@ -22,7 +22,6 @@ predict.regsubsets <- function(object, newdata, id, ...) {
   mat[,names(coefi)]%*%coefi
 }
 
-<<<<<<< HEAD
 # metrics from confusion matrix
 createMetrics <- function(confmat) {
   metrics <- if (dim(confmat)[1] == 2) {
@@ -82,10 +81,9 @@ createMetrics <- function(confmat) {
     )
   }
   return(metrics)
-  =======
-    # return only the positive part or zero of a numeric vector
-    pos.part <- function(x) {
-      x <- ifelse(x < 0, 0, x)
-      x
-      >>>>>>> 450ca409aa03e994ac0f1fce4579083d26e831a4
-    }
+}
+# return only the positive part or zero of a numeric vector
+pos.part <- function(x) {
+  x <- ifelse(x < 0, 0, x)
+  return(x)
+}
