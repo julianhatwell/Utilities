@@ -57,8 +57,8 @@ createMetrics <- function(confmat) {
     } else {
       ntn <- 0
       nfn <- 0
-      ntp <- confmat[2,2]
-      nfp <- confmat[2,1]
+      ntp <- confmat[1,2]
+      nfp <- confmat[1,1]
       
       npv <- 0
       ppv <- 1
