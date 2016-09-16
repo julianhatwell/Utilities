@@ -1,4 +1,4 @@
-# paste two strings together - for creating file names from params
+# paste a string and _file - for creating file names from params
 me_File <- function(f) { paste0(f, "_File") }
 
 # paste two strings together - for combining file paths
@@ -11,6 +11,7 @@ save.as.csv <- function(df, fName) {
   write.csv(df, pathTo(paste0(fName, ".csv")))
 } 
 
+# obsolete - before I learned match. Keep for legacy.
 # give it a vector and returns a function to search that vector
 find_in_vector <- function(vec) { function(find) { any(find == vec) } }
 
@@ -82,8 +83,42 @@ createMetrics <- function(confmat) {
   }
   return(metrics)
 }
+
 # return only the positive part or zero of a numeric vector
 pos.part <- function(x) {
   x <- ifelse(x < 0, 0, x)
   return(x)
 }
+
+# regression accuracy measures - individual and grouped
+MSE <- function(act, pred) {
+  sum((pred - act)^2)/length(pred)
+} # mean squared error
+
+MAD <- function(act, pred) {
+  median(abs(pred - act))
+} # absolute median deviation
+
+RMSE <- function(act, pred) {
+  sqrt(sum((pred - act)^2)/length(pred))
+} # route mean squared error
+
+reg.measures <- function(act, pred) {
+  MSE.measure <- MSE(act, pred)
+  RMSE.measure <- RMSE(act, pred)
+  MAD.measure <- MAD(act, pred)
+  data.frame(MSE.measure, RMSE.measure, MAD.measure)
+}
+
+# create a formula from column names of a df
+generate.full.fmla <- function(resp, dt) {
+  nms <- names(dt)
+  fmla <- as.formula(paste(resp, "~", paste(nms[!nms %in% resp], collapse = " + ")))
+  fmla
+}
+
+# create a formula from a vector of column names
+generate.fmla <- function(resp, preds) {
+  fmla <- as.formula(paste(resp, "~", paste(nms, collapse = " + ")))
+}
+
